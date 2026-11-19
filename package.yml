@@ -1,0 +1,21 @@
+package: community.lazycat.app.vnts
+version: 1.2.13
+name: vnts
+description: "VNT virtual networking server (vnts). Manages VNT client registration over UDP/TCP 29872 and provides a web console on port 29870 for tokens, device management and WireGuard client config."
+min_os_version: 1.5.0
+homepage: https://github.com/lmq8267/vnt_s
+author: lmq8267
+license: Unlicense
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: "vnts"
+    description: "VNT 异地组网服务端。监听 29872（TCP/UDP）为 VNT 客户端提供注册、握手与中继转发，内置 29870 端口 Web 管理后台，可管理组网 token、在线设备并生成 WireGuard 客户端配置。"
+  zh_CN:
+    name: "vnts"
+    description: "VNT 异地组网服务端。监听 29872（TCP/UDP）为 VNT 客户端提供注册、握手与中继转发，内置 29870 端口 Web 管理后台，可管理组网 token、在线设备并生成 WireGuard 客户端配置。"
+  en:
+    name: "vnts"
+    description: "VNT virtual networking server. Listens on 29872 (TCP/UDP) for VNT client registration, handshake and relay, with a built-in web console on port 29870 to manage network tokens, devices and WireGuard client configs."

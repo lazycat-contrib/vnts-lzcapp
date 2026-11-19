@@ -1,0 +1,30 @@
+params:
+  - id: login_user
+    type: string
+    name: "Web Username"
+    description: "Username for the vnts web console (default: admin)"
+    default_value: "admin"
+    optional: true
+
+  - id: login_password
+    type: secret
+    name: "Web Password"
+    description: "Password for the vnts web console (random by default)"
+    default_value: "$random(len=20)"
+    optional: true
+
+locales:
+  zh:
+    login_user:
+      name: "Web 后台用户名"
+      description: "vnts Web 管理后台的登录用户名（默认 admin）"
+    login_password:
+      name: "Web 后台密码"
+      description: "vnts Web 管理后台的登录密码（默认随机生成）"
+  en:
+    login_user:
+      name: "Web Username"
+      description: "Username for the vnts web console (default: admin)"
+    login_password:
+      name: "Web Password"
+      description: "Password for the vnts web console (random by default)"

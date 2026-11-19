@@ -1,0 +1,48 @@
+application:
+  subdomain: vnts
+  multi_instance: false
+  public_path:
+    - /
+  upstreams:
+    - location: /
+      backend: http://vnts:29870/
+  # 29872 数据端口（TCP+UDP）走 L4 ingress，客户端直连盒子公网/内网 IP
+  ingress:
+    - port: 29872
+      protocol: tcp
+    - port: 29872
+      protocol: udp
+  # 免密登录：登录页 /login.html，账号 #user、密码 #mima，提交按钮 #submit（JS 读取后 POST api/login）
+  injects:
+    - id: login-autofill
+      when:
+        - /login.html
+        - /
+      do:
+        - src: builtin://simple-inject-password
+          params:
+            user: "{{ .U.login_user }}"
+            password: "{{ .U.login_password }}"
+            userSelector: "#user"
+            passwordSelector: "#mima"
+            submitSelector: "#submit"
+
+services:
+  vnts:
+    # upstream: docker.io/lmq8267/vnts:1.2.13
+    # 镜像模式（delivery.mode=mirror）发布到喵喵商店时，Action 校验 digest 一致。
+    image: docker.1ms.run/lmq8267/vnts:1.2.13
+    environment:
+      - TZ=Asia/Shanghai
+    command: "-p 29872 -P 29870 -U {{ .U.login_user }} -W {{ .U.login_password }}"
+    binds:
+      # 上游文档：持久化 Web 页面添加的 WireGuard 客户端配置，防止重启丢失
+      - /lzcapp/var/wg:/usr/bin/vnts_wg
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "wget -q -O /dev/null http://127.0.0.1:29870/login.html || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

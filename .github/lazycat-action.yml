@@ -1,0 +1,42 @@
+version: 1
+
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: .lazycat-build/vnts.lpk
+  target_arch: amd64
+
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: image
+    image: vnts
+
+build:
+  toolchains: []
+  run_buildscript: false
+
+images:
+  # 主服务：vnts 组网服务端（docker.io/lmq8267/vnts）。上游发 1.2.x / 1.2.x.y
+  # SemVer tag 及 latest / v1.2.9 别名；只跟正式 SemVer，排除别名
+  - id: vnts
+    target: service
+    service: vnts
+    source: docker.io/lmq8267/vnts
+    channel: stable
+    tag_regex: '^\d+\.\d+\.\d+$'
+    delivery:
+      # 喵喵商店镜像模式：经 docker.1ms.run 加速直连上游，要求 digest 与上游一致
+      mode: mirror
+      require_digest_match: true
+
+stores:
+  private:
+    enabled: true
+    skip_if_version_exists: true
+    name: vnts
+    summary: "vnts 懒猫微服打包：VNT 异地组网服务端（Rust，UDP/TCP 29872 数据端口 + 29870 Web 管理后台，支持 WireGuard 客户端接入）。"
+  official:
+    enabled: false
